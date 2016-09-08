@@ -70,6 +70,12 @@ util.inherits(TunnelingAgent, events.EventEmitter)
 TunnelingAgent.prototype.addRequest = function addRequest(req, host, port) {
   var self = this
 
+  // see https://github.com/request/request/issues/779
+  if (typeof host == typeof {}) {
+     port = host.uri.port;
+     host = host.uri.host;
+   }
+
   if (self.sockets.length >= this.maxSockets) {
     // We are over limit so we'll add it to the queue.
     self.requests.push({host: host, port: port, request: req})
